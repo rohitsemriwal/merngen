@@ -90,7 +90,7 @@ ReactDOM.createRoot(root).render(
 indexJsx: `export default function IndexScreen() {
     return(
         <div className="p-5">
-            <h1 className="text-3xl font-bold">Welcome to MERNGen</h1>
+            <h1 className="text-3xl font-bold">Welcome to RSMERN</h1>
             <p>If you see this screen, everything's working fine!</p>
         </div>
     );

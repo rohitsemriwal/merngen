@@ -1,5 +1,5 @@
 {
-  "name": "merngen",
+  "name": "rsmern",
   "version": "0.1.0",
   "description": "",
   "type": "module",
@@ -7,7 +7,7 @@
   "bin": "src/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rohitsemriwal/merngen.git"
+    "url": "https://github.com/rohitsemriwal/rsmern.git"
   },
   "scripts": {
     "start": "node src/main.js",

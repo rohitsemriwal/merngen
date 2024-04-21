@@ -14,7 +14,7 @@ const commands = {
 
 function handleCommands() {
     if(!command) {
-        console.log("Use: `merngen init project-name` to create a new project");
+        console.log("Use: `rsmern init project-name` to create a new project");
         return;
     }
 

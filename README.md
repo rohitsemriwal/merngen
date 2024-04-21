@@ -1,14 +1,14 @@
-## MERNGen
+## RSMERN
 Simple MERN Stack template generator written completely in Javascript
 
 #### Install the package globally by doing:
 `
-npm install -g merngen
+npm install -g rsmern
 `
 
 #### Create a new project by executing:
 `
-merngen init project-name
+rsmern init project-name
 `
 
 #### Backend: `Typescript`
