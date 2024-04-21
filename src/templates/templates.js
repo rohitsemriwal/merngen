@@ -63,9 +63,7 @@ export function WebRouter() {
 
     router.get("*", function(req, res) {
         const p = path.join(__dirname, "../public/index.html");
-        res.sendFile(p, function(err) {
-            res.send("404 Not Found");
-        });
+        return res.sendFile(p);
     })
 
     return router;
