@@ -1,0 +1,19 @@
+{
+  "name": "merngen",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "main": "src/main.js",
+  "bin": "src/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rohitsemriwal/merngen.git"
+  },
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [ "MERN stack generator", "React", "Express" ],
+  "author": "Rohit Semriwal",
+  "license": "ISC"
+}
