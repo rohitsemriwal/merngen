@@ -15,3 +15,4 @@ rsmern init <project-name>
 `
 rsmern create:feature <featurename>
 `
+#### NOTE: The `create:feature` command is only meant for the backend. Make sure to change the current directory to backend, before proceeding.
