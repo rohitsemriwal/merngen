@@ -8,8 +8,10 @@ npm install -g rsmern
 
 #### Create a new project by executing:
 `
-rsmern init project-name
+rsmern init <project-name>
 `
 
-#### Backend: `Typescript`
-#### Frontend `React(JS)`
+#### Create a new feature by executing (generates the model, controller and router):
+`
+rsmern create:feature <featurename>
+`

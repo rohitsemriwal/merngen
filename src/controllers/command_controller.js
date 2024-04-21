@@ -131,6 +131,22 @@ const CommandController = {
         FileHandler.createFile(`${projectName}/backend/src/types/index.d.ts`, Templates.indexDts);
 
         console.log("All done.");
+    },
+
+    createFeature: function(featureName) {
+        // Generating Model
+        console.log(`🚗: Generating model for ${featureName}..`);
+        FileHandler.createFile(`src/models/${featureName}_model.ts`, Templates.featureModel(featureName));
+
+        // Generating Controller
+        console.log(`🎮: Generating controller for ${featureName}..`);
+        FileHandler.createFile(`src/controllers/${featureName}_controller.ts`, Templates.featureController(featureName));
+
+        // Generating Router
+        console.log(`🚀: Generating router for ${featureName}..`);
+        FileHandler.createFile(`src/routers/${featureName}_router.ts`, Templates.featureRouter(featureName));
+
+        console.log(`🧠: All done! Make sure to add the new router in your routes.ts file.`);
     }
 
 };

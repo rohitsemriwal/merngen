@@ -1,3 +1,21 @@
+function capitalizeFirstLetter(str) {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function pluralize(word) {
+    if (word.endsWith('y')) {
+        return word.slice(0, -1) + 'ies';
+    }
+    else if (word.endsWith('x') || word.endsWith('h')) {
+        return word + 'es';
+    }
+    else {
+        return word + 's';
+    }
+}
+
+
 const Templates = {
 
     viteConfig: `import { defineConfig } from 'vite'
@@ -142,7 +160,143 @@ indexDts: `namespace Express {
         success: (data: any, message: string="") => any,
         failure: (message: string="") => any
     }
-}`
+}`,
+
+featureModel: function(name) {
+    return `import { Schema, model } from "mongoose";
+    
+const ${name}Schema = new Schema({
+    // TODO: Add your fields here..
+
+    createdOn: { type: Date },
+    updatedOn: { type: Date }
+});
+
+${name}Schema.pre('save', function(this: any, next) {
+    this.createdOn = new Date();
+    this.updatedOn = new Date();
+    next();
+});
+
+${name}Schema.pre(['updateOne', 'findOneAndUpdate'], function(this: any, next) {
+    const update = this.getUpdate();
+    delete update._id;
+
+    update.updatedOn = new Date();
+    next();
+});
+
+const ${capitalizeFirstLetter(name)}Model = model('${capitalizeFirstLetter(name)}', ${name}Schema);
+export default ${capitalizeFirstLetter(name)}Model;`;
+},
+
+featureController: function(name) {
+    const modelFile =  `${name}_model`;
+    const modelName = `${capitalizeFirstLetter(name)}Model`;
+
+    return `import ${modelName} from "./../models/${modelFile}";
+import { Request, Response } from "express";
+import { Types } from "mongoose";
+    
+const ${capitalizeFirstLetter(name)}Controller = {
+
+    get${capitalizeFirstLetter(pluralize(name))}: async function(req: Request, res: Response) {
+        try {
+            const ${pluralize(name)} = await ${modelName}.find();
+            return res.success(${pluralize(name)});
+        }
+        catch(ex: any) {
+            return res.failure(ex.toString());
+        }
+    },
+
+    get${capitalizeFirstLetter(name)}ById: async function(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            if(!Types.ObjectId.isValid(id)) throw "Invalid ID";
+
+            const ${name} = await ${modelName}.findById(id);
+            return res.success(${name});
+        }
+        catch(ex: any) {
+            return res.failure(ex.toString());
+        }
+    },
+
+    create${capitalizeFirstLetter(name)}: async function(req: Request, res: Response) {
+        try {
+            const data = req.body;
+
+            const new${capitalizeFirstLetter(name)} = new ${modelName}(data);
+            await new${capitalizeFirstLetter(name)}.save();
+
+            return res.success(new${capitalizeFirstLetter(name)});
+        }
+        catch(ex: any) {
+            return res.failure(ex.toString());
+        }
+    },
+
+    update${capitalizeFirstLetter(name)}: async function(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            if(!Types.ObjectId.isValid(id)) throw "Invalid ID";
+
+            const data = req.body;
+
+            const updated${capitalizeFirstLetter(name)} = await ${modelName}.findByIdAndUpdate(id, data, { new: true });
+            if(!updated${capitalizeFirstLetter(name)}) {
+                throw "${name} not found";
+            }
+
+            return res.success(updated${capitalizeFirstLetter(name)});
+        }
+        catch(ex: any) {
+            return res.failure(ex.toString());
+        }
+    },
+
+    delete${capitalizeFirstLetter(name)}: async function(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            if(!Types.ObjectId.isValid(id)) throw "Invalid ID";
+
+            const deleted${capitalizeFirstLetter(name)} = await ${modelName}.findByIdAndDelete(id);
+            if(!deleted${capitalizeFirstLetter(name)}) {
+                throw "${name} not found";
+            }
+
+            return res.success(deleted${capitalizeFirstLetter(name)});
+        }
+        catch(ex: any) {
+            return res.failure(ex.toString());
+        }
+    }
+
+};
+
+export default ${capitalizeFirstLetter(name)}Controller;`;
+},
+
+featureRouter: function(name) {
+    const controllerFile = `${name}_controller`;
+    const controllerName = `${capitalizeFirstLetter(name)}Controller`;
+
+    return `import ${controllerName} from "./../controllers/${controllerFile}";
+import { Router } from "express";
+
+export default function ${capitalizeFirstLetter(name)}Router() {
+    const router = Router();
+
+    router.get("/", ${controllerName}.get${capitalizeFirstLetter(pluralize(name))});
+    router.get("/:id", ${controllerName}.get${capitalizeFirstLetter(name)}ById);
+    router.post("/", ${controllerName}.create${capitalizeFirstLetter(name)});
+    router.put("/:id", ${controllerName}.update${capitalizeFirstLetter(name)});
+    router.delete("/:id", ${controllerName}.delete${capitalizeFirstLetter(name)});
+
+    return router;
+}`;
+}
 
 };
 

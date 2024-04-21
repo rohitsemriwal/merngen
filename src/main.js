@@ -9,7 +9,8 @@ const [
 ] = process.argv;
 
 const commands = {
-    init: "init"
+    init: "init",
+    createFeature: "create:feature"
 };
 
 function handleCommands() {
@@ -21,6 +22,9 @@ function handleCommands() {
     switch(command) {
         case commands.init:
             CommandController.init(subCommand);
+            break;
+        case commands.createFeature:
+            CommandController.createFeature(subCommand.toLowerCase());
             break;
         default:
             console.log(`Invalid command ${command}`);
