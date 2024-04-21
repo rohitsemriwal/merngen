@@ -75,7 +75,8 @@ const CommandController = {
                 outDir: "./dist",
                 module: "commonjs",
                 esModuleInterop: true,                             
-                forceConsistentCasingInFileNames: true
+                forceConsistentCasingInFileNames: true,
+                skipLibCheck: true
             }
         }, null, "\t"));
 
@@ -125,8 +126,11 @@ const CommandController = {
         FileHandler.createFile(`${projectName}/.gitignore`, Templates.gitignoreProject);
         FileHandler.createFile(`${projectName}/backend/.gitignore`, Templates.gitignoreBackend);
 
+        // Generate Response Middleware
+        FileHandler.createFile(`${projectName}/backend/src/middlewares/response.ts`, Templates.responseMiddleware);
+        FileHandler.createFile(`${projectName}/backend/src/types/index.d.ts`, Templates.indexDts);
 
-        console.log("Done!");
+        console.log("All done.");
     }
 
 };

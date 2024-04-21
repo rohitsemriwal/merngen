@@ -18,6 +18,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import path from "path";
+import ApiResponse from "./middlewares/response";
 import { ApiRouter, WebRouter } from "./routes";
 
 const app = express();
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
+app.use(ApiResponse());
 app.use("/api", ApiRouter());
 app.use(WebRouter());
 
@@ -61,7 +63,9 @@ export function WebRouter() {
 
     router.get("*", function(req, res) {
         const p = path.join(__dirname, "../public/index.html");
-        res.sendFile(p);
+        res.sendFile(p, function(err) {
+            res.send("404 Not Found");
+        });
     })
 
     return router;
@@ -115,7 +119,32 @@ mainCss: `@tailwind base;
 gitignoreProject: `.DS_Store`,
 
 gitignoreBackend: `node_modules
-dist`
+dist`,
+
+responseMiddleware: `import { NextFunction, Request, Response } from "express";
+
+function ApiResponse() {
+    return (req: Request, res: Response, next: NextFunction) => {
+        res.success = function(data, message) {
+            return res.status(200).json({ success: true, data: data, message: message });
+        }
+
+        res.failure = function(message) {
+            return res.status(500).json({ success: false, message: message });
+        }
+
+        next();
+    }
+}
+
+export default ApiResponse;`,
+
+indexDts: `namespace Express {
+    interface Response {
+        success: (data: any, message: string="") => any,
+        failure: (message: string="") => any
+    }
+}`
 
 };
 
