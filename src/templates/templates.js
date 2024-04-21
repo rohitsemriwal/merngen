@@ -110,7 +110,12 @@ export default {
 
 mainCss: `@tailwind base;
 @tailwind components;
-@tailwind utilities;`
+@tailwind utilities;`,
+
+gitignoreProject: `.DS_Store`,
+
+gitignoreBackend: `node_modules
+dist`
 
 };
 

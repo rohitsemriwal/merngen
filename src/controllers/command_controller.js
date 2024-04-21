@@ -121,6 +121,10 @@ const CommandController = {
         FileHandler.createFile(`${projectName}/frontend/tailwind.config.js`, Templates.tailwindConfig);
         FileHandler.createFile(`${projectName}/frontend/src/main.css`, Templates.mainCss);
 
+        // Generate .gitignore files
+        FileHandler.createFile(`${projectName}/.gitignore`, Templates.gitignoreProject);
+        FileHandler.createFile(`${projectName}/backend/.gitignore`, Templates.gitignoreBackend);
+
 
         console.log("Done!");
     }
