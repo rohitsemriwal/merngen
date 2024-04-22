@@ -6,8 +6,9 @@ import Templates from "./../templates/templates.js";
 const CommandController = {
 
     init: function(projectName) {
-        if(!projectName || projectName == "") {
-            console.log("Please give a name for the project");
+        if(!projectName || projectName.trim() == "") {
+            console.log("Please give a name for the project: `rsmern init <project-name>`");
+            return;
         }
 
         FileHandler.createDir(`${projectName}`);
@@ -29,8 +30,8 @@ const CommandController = {
             }
         });
 
-        console.log("Installing react router...");
-        execSync(`cd ${projectName}/frontend && npm install react-router-dom`, function(err, stdout, stderr) {
+        console.log("Installing react router and axios...");
+        execSync(`cd ${projectName}/frontend && npm install react-router-dom axios`, function(err, stdout, stderr) {
             if(err) {
                 console.log(err);
                 return;
@@ -122,6 +123,8 @@ const CommandController = {
         FileHandler.createFile(`${projectName}/frontend/tailwind.config.js`, Templates.tailwindConfig);
         FileHandler.createFile(`${projectName}/frontend/src/main.css`, Templates.mainCss);
 
+        FileHandler.createFile(`${projectName}/frontend/src/config/api.js`, Templates.apiFrontend);
+
         // Generate .gitignore files
         FileHandler.createFile(`${projectName}/.gitignore`, Templates.gitignoreProject);
         FileHandler.createFile(`${projectName}/backend/.gitignore`, Templates.gitignoreBackend);
@@ -137,6 +140,11 @@ const CommandController = {
     },
 
     createFeature: function(featureName) {
+        if(!featureName || featureName.trim() == "") {
+            console.log("Enter a name for the feature: `rsmern create:feature <feature>`");
+            return;
+        }
+
         // Generating Model
         console.log(`🚗: Generating model for ${featureName}..`);
         FileHandler.createFile(`src/models/${featureName}_model.ts`, Templates.featureModel(featureName));

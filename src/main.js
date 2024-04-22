@@ -24,7 +24,7 @@ function handleCommands() {
             CommandController.init(subCommand);
             break;
         case commands.createFeature:
-            CommandController.createFeature(subCommand.toLowerCase());
+            CommandController.createFeature((subCommand ?? "").toLowerCase());
             break;
         default:
             console.log(`Invalid command ${command}`);

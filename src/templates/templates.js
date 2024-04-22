@@ -318,7 +318,18 @@ export default function Pagination() {
 
         next();   
     }
-}`
+}`,
+
+apiFrontend: `import { Axios } from "axios";
+
+const Api = new Axios({
+    baseURL: "http://localhost:5000/api",
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+
+export default Api;`
 
 };
 
