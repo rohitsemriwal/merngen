@@ -37,6 +37,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import path from "path";
 import ApiResponse from "./middlewares/response";
+import Pagination from "./middlewares/pagination";
 import { ApiRouter, WebRouter } from "./routes";
 
 const app = express();
@@ -47,6 +48,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(ApiResponse());
+app.use(Pagination());
 app.use("/api", ApiRouter());
 app.use(WebRouter());
 
@@ -156,6 +158,13 @@ function ApiResponse() {
 export default ApiResponse;`,
 
 indexDts: `namespace Express {
+    interface Request {
+        limit: number;
+        skip: number;
+        page: number;
+        perPage: number;
+    }
+
     interface Response {
         success: (data: any, message: string="") => any,
         failure: (message: string="") => any
@@ -202,7 +211,7 @@ const ${capitalizeFirstLetter(name)}Controller = {
 
     get${capitalizeFirstLetter(pluralize(name))}: async function(req: Request, res: Response) {
         try {
-            const ${pluralize(name)} = await ${modelName}.find();
+            const ${pluralize(name)} = await ${modelName}.find().skip(req.skip).limit(req.limit);
             return res.success(${pluralize(name)});
         }
         catch(ex: any) {
@@ -296,7 +305,20 @@ export default function ${capitalizeFirstLetter(name)}Router() {
 
     return router;
 }`;
-}
+},
+
+paginationMiddleware: `import { Request, Response, NextFunction } from "express";
+
+export default function Pagination() {
+    return (req: Request, res: Response, next: NextFunction) => {
+        req.page = parseInt(req.query.page?.toString() ?? "1");
+        req.perPage = parseInt(req.query.perPage?.toString() ?? "100");
+        req.limit = req.perPage;
+        req.skip = (req.page - 1) * req.perPage;
+
+        next();   
+    }
+}`
 
 };
 
